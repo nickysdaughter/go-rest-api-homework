@@ -48,12 +48,6 @@ func getTasks(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//_, err = w.Write(resp)
-	//if err != nil {
-	//	http.Error(w, "Ошибка при записи ответа", http.StatusInternalServerError)
-	//	return
-	//}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(resp)
