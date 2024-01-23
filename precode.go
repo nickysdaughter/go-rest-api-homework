@@ -50,7 +50,11 @@ func getTasks(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
+	_, err = w.Write(resp)
+	if err != nil {
+		http.Error(w, "Ошибка при записи ответа", http.StatusInternalServerError)
+		return
+	}
 }
 
 func postTask(w http.ResponseWriter, req *http.Request) {
@@ -58,7 +62,7 @@ func postTask(w http.ResponseWriter, req *http.Request) {
 	var buf bytes.Buffer
 	_, err := buf.ReadFrom(req.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if err = json.Unmarshal(buf.Bytes(), &task); err != nil {
@@ -83,13 +87,17 @@ func getTaskByID(w http.ResponseWriter, req *http.Request) {
 
 	resp, err := json.Marshal(task)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
+	_, err = w.Write(resp)
+	if err != nil {
+		http.Error(w, "Ошибка при записи ответа", http.StatusInternalServerError)
+		return
+	}
 }
 
 func deleteTaskByID(w http.ResponseWriter, req *http.Request) {
@@ -104,7 +112,6 @@ func deleteTaskByID(w http.ResponseWriter, req *http.Request) {
 	delete(tasks, id)
 
 	w.WriteHeader(http.StatusOK)
-
 }
 
 func main() {
